@@ -23,7 +23,7 @@ const UserSchema= new Schema({
     coverPic:[String],
 },
 {
-    timestamps:true
+    timestamps:true //for created at 
 })
 const userModel = mongoose.models.User ||  model('User', UserSchema);
 export default userModel;
