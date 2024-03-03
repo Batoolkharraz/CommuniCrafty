@@ -82,7 +82,12 @@ export const findByCraft = asyncHandler(async (req, res, next) => {
             usersId.push(u);
         }
     for(const id of usersId){
-        const user =await userModel.findById(id);
+        const u =await userModel.findById(id);
+        let user={};
+        user.userName=u.userName;
+        user.email=u.email;
+       // user.phone=u.phone;
+
         usersProfiles.push(user);
     }
     return res.status(201).json({ message: "success", usersId,usersProfiles });
