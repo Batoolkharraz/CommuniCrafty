@@ -17,7 +17,7 @@ export const updatePassword = async (req, res, next) => {
 }
 
 export const getProfile = async (req, res, next) => {
-    const user = await userModel.findById(req.params.id).select('userName email');
+    const user = await userModel.findById(req.params.id).select('userName email phone');
 
     if (!user) {
         return next(new Error("invalid profile id"));

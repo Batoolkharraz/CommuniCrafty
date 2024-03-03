@@ -10,7 +10,7 @@ const router = Router();
 
 
 router.patch('/updatePassword',auth,validation(validators.updatePassword),userCont.updatePassword);
-router.get('/:id/profile',validation(validators.shareProfile),userCont.getProfile);
+router.get('/:id/profile',userCont.getProfile);
 router.post('/addUser',auth(endPoint.addUser),userCont.addUser);
 router.delete('/deleteUser/:id',auth(endPoint.deleteUser),userCont.deleteUser);
 router.patch('/updateUser/:id',auth(endPoint.updateUser),userCont.updateUser);
