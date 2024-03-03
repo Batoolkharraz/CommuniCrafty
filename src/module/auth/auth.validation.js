@@ -10,8 +10,10 @@ export const signupSchema=joi.object({
         email:generalFeilds.email,
         password:generalFeilds.password,
         cPassword:joi.string().valid(joi.ref('password')).required(),
-        age:joi.number().integer().min(20).max(80),
+        age:joi.number().integer().min(17).max(80),
         gender:joi.string().alphanum().valid('male','female'),
+        phone:joi.string().max(10),
+        address:joi.string().max(20),
     }).required()
 
 export const token=joi.object({

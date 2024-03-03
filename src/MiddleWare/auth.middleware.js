@@ -4,7 +4,7 @@ import userModel from "../../DB/model/user.model.js"
 import { asyncHandler } from '../Services/errorHandling.js';
 
 export const roles={
-    superAdmin:'super admin',
+    shopAdmin:'shop Admin',
     admin:'admin',
     user:'user',
 }

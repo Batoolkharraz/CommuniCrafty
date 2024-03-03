@@ -1,14 +1,13 @@
 import userModel from "../../../../DB/model/user.model.js"
 import { generateToken, verifyToken } from "../../../Services/generateAndVerify.js";
 import { compare, hash } from "../../../Services/hashAndCompare.js";
-import { signupSchema,signinSchema } from "../auth.validation.js";
 import { sendEmail } from '../../../Services/sendEmail.js';
 import { asyncHandler } from "../../../Services/errorHandling.js";
 import { customAlphabet } from "nanoid";
 
 export const signup =async (req,res,next)=>{
     
-    const {userName,email,password} = req.body;
+    const {userName,email,password,phone,address,age} = req.body;
     const user = await userModel.findOne({email});
     if(user){
         return next (new Error("email already exists",{cause:409}));
@@ -21,7 +20,7 @@ export const signup =async (req,res,next)=>{
      const html = `<a href="${link}">verify email</a>  <br/> <br/> <br/> <a href="${Rlink}"> send new email </a> `
      await sendEmail(email,'confirm email',html)
     const Hpassword=hash(password);
-    const createUser = await userModel.create({userName,password:Hpassword,email});
+    const createUser = await userModel.create({userName,password:Hpassword,email,phone,address,age});
     
     return res.status(201).json({message:"success",user:createUser._id});
 }
