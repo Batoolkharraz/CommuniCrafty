@@ -41,14 +41,6 @@ const userSchema = new Schema({
     changePasswordTime:{
         type:Date
     },
-    craft:[{
-        categoryId:{ type: Types.ObjectId, ref: 'Category', required: true },
-        skill:{
-            type:String,
-            defult:'beginner',
-            enum:['beginner','advanced','professional'],
-        },
-    }],
 
 },{
     timestamps:true

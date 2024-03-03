@@ -42,14 +42,10 @@ export const updateStatus = asyncHandler(async (req, res, next) => {
 });
 
 export const addUser = asyncHandler(async (req, res, next) => {
-    const { userName, email, password } = req.body;
-    let role = 'null';
+    const { userName, email, password, role } = req.body;
     const user = await userModel.findOne({ email });
     if (user) {
         return next(new Error("email already exists", { cause: 409 }));
-    }
-    if (req.user.role == 'admin') {
-        role = 'user';
     }
     const Hpassword = hash(password);
     const createUser = await userModel.create({ userName, password: Hpassword, email, confirmEmail: true, role });
@@ -96,58 +92,13 @@ export const updateUser = asyncHandler(async (req, res, next) => {
         }
         user.userName = req.body.userName;
     }
-
-    if (req.body.status) {
-        user.status = req.body.status;
-    }
-
     if (req.body.address) {
         user.address = req.body.address;
     }
-
-    if (req.body.role) {
-        user.role = req.body.role;
+    if (req.body.phone) {
+        user.phone = req.body.phone;
     }
 
     await user.save();
     return res.json({ message: "success", user })
-});
-
-export const addCraft = asyncHandler(async (req, res, next) => {
-    const { skill } = req.body;
-    const { id } = req.params;
-    const user = await userModel.findById(id);
-
-    if (!user) {
-        return next(new Error("user not found"));
-    }
-
-    await userModel.findByIdAndUpdate(id, { skill });
-    return res.json({ message: "success" });
-});
-
-export const updateSkill = asyncHandler(async (req, res, next) => {
-    const { skill } = req.body;
-    const { id } = req.params;
-    const user = await userModel.findById(id);
-
-    if (!user) {
-        return next(new Error("user not found"));
-    }
-
-    await userModel.findByIdAndUpdate(id, { skill });
-    return res.json({ message: "success" });
-});
-
-export const deleteCraft = asyncHandler(async (req, res, next) => {
-    const { skill } = req.body;
-    const { id } = req.params;
-    const user = await userModel.findById(id);
-
-    if (!user) {
-        return next(new Error("user not found"));
-    }
-
-    await userModel.findByIdAndUpdate(id, { skill });
-    return res.json({ message: "success" });
 });

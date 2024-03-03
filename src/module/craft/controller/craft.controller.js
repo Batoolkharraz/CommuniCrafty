@@ -10,10 +10,10 @@ export const addCraft = asyncHandler(async (req, res, next) => {
     }
     const existingCraft = await craftModel.findOne({ userId: req.user._id });
     if (existingCraft) {
-        for(const craft of existingCraft.craft){
+        for (const craft of existingCraft.craft) {
             console.log(craft);
             const catId = craft.categoryId.toString();
-            if(catId==categoryId){
+            if (catId == categoryId) {
                 return next(new Error(`this craft is already addded `, { cause: 400 }));
             }
         }
@@ -45,9 +45,10 @@ export const deleteCraft = asyncHandler(async (req, res, next) => {
         return res.status(400).json({ message: "Please sign up first" });
     }
 
-    const existingCraft = await craftModel.findOne({ 
-        id:req.user._id, 
-        'craft.categoryId': categoryId });
+    const existingCraft = await craftModel.findOne({
+        id: req.user._id,
+        'craft.categoryId': categoryId
+    });
 
     if (!existingCraft) {
         return res.status(404).json({ message: "Craft not found" });
@@ -73,23 +74,16 @@ export const findByCraft = asyncHandler(async (req, res, next) => {
     if (!user) {
         return next(new Error(`please sign up first `, { cause: 400 }));
     }
-    const crafts = await craftModel.find({ 'craft.skill': req.body.skill});
-    let usersId=[];
-    let usersProfiles=[];
-    for(const craft of crafts){
-        const u=craft.userId.toString();
-        console.log(craft.userId.toString());
-            usersId.push(u);
-        }
-    for(const id of usersId){
-        const u =await userModel.findById(id);
-        let user={};
-        user.userName=u.userName;
-        user.email=u.email;
-       // user.phone=u.phone;
-
+    const crafts = await craftModel.find({ 'craft.skill': req.body.skill });
+    let usersId = [];
+    let usersProfiles = [];
+    for (const craft of crafts) {
+        const u = craft.userId.toString();
+        usersId.push(u);
+    }
+    for (const id of usersId) {
+        const user = await userModel.findById(id).select('userName email');
         usersProfiles.push(user);
     }
-    return res.status(201).json({ message: "success", usersId,usersProfiles });
+    return res.status(201).json({ message: "success", usersId, usersProfiles });
 })
-
