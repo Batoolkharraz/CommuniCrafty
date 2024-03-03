@@ -47,7 +47,6 @@ export const updateCategory = asyncHandler(async (req, res, next) => {
     return res.status(200).json({message:"success",category })
 })
 
-
 export const getAllCategory = asyncHandler(async (req, res, next) => {
 
     const categories = await categoryModel.find();

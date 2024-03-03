@@ -112,3 +112,42 @@ export const updateUser = asyncHandler(async (req, res, next) => {
     await user.save();
     return res.json({ message: "success", user })
 });
+
+export const addCraft = asyncHandler(async (req, res, next) => {
+    const { skill } = req.body;
+    const { id } = req.params;
+    const user = await userModel.findById(id);
+
+    if (!user) {
+        return next(new Error("user not found"));
+    }
+
+    await userModel.findByIdAndUpdate(id, { skill });
+    return res.json({ message: "success" });
+});
+
+export const updateSkill = asyncHandler(async (req, res, next) => {
+    const { skill } = req.body;
+    const { id } = req.params;
+    const user = await userModel.findById(id);
+
+    if (!user) {
+        return next(new Error("user not found"));
+    }
+
+    await userModel.findByIdAndUpdate(id, { skill });
+    return res.json({ message: "success" });
+});
+
+export const deleteCraft = asyncHandler(async (req, res, next) => {
+    const { skill } = req.body;
+    const { id } = req.params;
+    const user = await userModel.findById(id);
+
+    if (!user) {
+        return next(new Error("user not found"));
+    }
+
+    await userModel.findByIdAndUpdate(id, { skill });
+    return res.json({ message: "success" });
+});

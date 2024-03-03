@@ -21,16 +21,7 @@ const userSchema = new Schema({
     role:{
         type:String,
         default:'user',
-        enum:['user','admin']
-    },
-    status:{
-        type:String,
-        defult:'active',
-        enum:['active','not_active'],
-    },
-    gender:{
-        type:String,
-        enum:['male','female'],
+        enum:['user','admin','shop Admin']
     },
     address:{
         type:String,
@@ -50,9 +41,18 @@ const userSchema = new Schema({
     changePasswordTime:{
         type:Date
     },
+    craft:[{
+        categoryId:{ type: Types.ObjectId, ref: 'Category', required: true },
+        skill:{
+            type:String,
+            defult:'beginner',
+            enum:['beginner','advanced','professional'],
+        },
+    }],
+
 },{
     timestamps:true
 })
 
-const userModel = mongoose.models.user || model('user',userSchema);
+const userModel = mongoose.models.User || model('User',userSchema);
 export default userModel;

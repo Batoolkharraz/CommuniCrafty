@@ -13,7 +13,7 @@ router.patch('/updatePassword',auth,validation(validators.updatePassword),userCo
 router.get('/:id/profile',validation(validators.shareProfile),userCont.getProfile);
 
 
-router.patch('/updateStatus/:id',auth(endPoint.updateStatus),userCont.updateStatus);
+router.patch('/updateSkill/:id/:categoryId',auth(endPoint.updateSkill),userCont.updateSkill);
 router.post('/addUser',auth(endPoint.addUser),userCont.addUser);
 router.delete('/deleteUser/:id',auth(endPoint.deleteUser),userCont.deleteUser);
 router.patch('/updateUser/:id',auth(endPoint.updateUser),userCont.updateUser);
