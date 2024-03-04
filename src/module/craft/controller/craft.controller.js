@@ -69,7 +69,7 @@ export const getCraft = asyncHandler(async (req, res, next) => {
     return res.status(201).json({ message: "success", craft });
 })
 
-export const findByCraft = asyncHandler(async (req, res, next) => {
+export const findBySkill = asyncHandler(async (req, res, next) => {
     const user = await userModel.findById(req.user._id);
     if (!user) {
         return next(new Error(`please sign up first `, { cause: 400 }));
@@ -87,3 +87,23 @@ export const findByCraft = asyncHandler(async (req, res, next) => {
     }
     return res.status(201).json({ message: "success", usersId, usersProfiles });
 })
+
+export const findByCraft = asyncHandler(async (req, res, next) => {
+    const user = await userModel.findById(req.user._id);
+    if (!user) {
+        return next(new Error(`please sign up first `, { cause: 400 }));
+    }
+    const crafts = await craftModel.find({ 'craft.categoryId': req.params.categoryId });
+    let usersId = [];
+    let usersProfiles = [];
+    for (const craft of crafts) {
+        const u = craft.userId.toString();
+        usersId.push(u);
+    }
+    for (const id of usersId) {
+        const user = await userModel.findById(id).select('userName email phone');
+        usersProfiles.push(user);
+    }
+    return res.status(201).json({ message: "success", usersId, usersProfiles });
+})
+
