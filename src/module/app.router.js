@@ -2,7 +2,9 @@ import authRouter from './auth/auth.router.js';
 import userRouter from './user/user.router.js';
 import categoryRouter from './category/category.router.js';
 import craftRouter from './craft/craft.router.js';
+import toolRouter from './tool/tool.router.js';
 import projectrouter from './projects/projects.router.js';
+import promotRouter from './promot/promot.router.js';
 import { globalErrorHandel } from '../Services/errorHandling.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -23,7 +25,7 @@ const initApp=(app,express)=>{
     app.use('/user',userRouter);
     app.use('/category',categoryRouter);
     app.use('/craft',craftRouter);
-    app.use('/addproject',projectrouter)
+    app.use('/project',projectrouter)
     app.use('/tool',toolRouter);
     app.use('/promot',promotRouter);
     app.use('*',(req,res)=>{
