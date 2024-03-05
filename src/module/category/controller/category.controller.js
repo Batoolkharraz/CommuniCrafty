@@ -6,7 +6,7 @@ import { asyncHandler } from "../../../Services/errorHandling.js";
 export const createCategory = asyncHandler(async (req, res, next) => {
 
     const name = req.body.name;
-    console.log(name)
+    
 
     if (await categoryModel.findOne({ name })) {
         return next(new Error(`duplicateed category name ${name}`, { cause: 409 }));
