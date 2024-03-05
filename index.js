@@ -13,4 +13,5 @@ const port = process.env.PORT||3001;
 initApp(app,express);
 connectDb().then(()=>{
     app.listen(port);
+    console.log("sart")
 })

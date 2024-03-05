@@ -1,4 +1,3 @@
-
 import mongoose, { Schema, model, Types } from 'mongoose';
 const projectSchema = new Schema({
     userId: { type: Types.ObjectId, ref: 'User', required: true },
