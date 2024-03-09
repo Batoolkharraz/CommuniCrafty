@@ -154,30 +154,3 @@ export const serach=asyncHandler(async(req,res,next)=>{
 
 )
 
-    // const user = await userModel.findById(req.user._id);
-    // if (!user) {
-    //     return next(new Error(`please sign up first `, { cause: 400 }));
-    // }
-//  const email=req.body.email
-//  return res.json({message:"email is "})
-//  let token =generateToken({email},process.env.SIGNUP_TOKEN,60*5);
-//  const refreshToken = generateToken({email},process.env.SIGNUP_TOKEN,60*60*24);
-
-// const link =`${req.protocol}://${req.headers.host}/auth/confirmEmail/${token}`;
-// const Rlink =`${req.protocol}://${req.headers.host}/auth/newConfirmEmail/${refreshToken}`;
-//   const html = `<a href="${link}">verify email</a>  <br/> <br/> <br/> <a href="${Rlink}"> send new email </a> `
-//   await sendEmail(email,'confirm email',html)
-//    const newproject=await projectModel.create(
-//     {   projectname: req.body.projectname,
-//         description:req.body.description,
-//         members:[
-//             {
-                
-//             }
-//         ]
-
-//     }
-
-//    )
-
-// })

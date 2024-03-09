@@ -9,6 +9,11 @@ const ProjectGroupSchema = new Schema({
         type: String,
         required: true,
     },
+    createdby:{
+        type: Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
     members: [{
         userId: {
             type: Types.ObjectId,
@@ -26,7 +31,8 @@ const ProjectGroupSchema = new Schema({
         confirm: {
             type: Boolean, // Corrected schema type
             default: false,
-        }
+        },
+       
     }]
 }, {
     timestamps: true
