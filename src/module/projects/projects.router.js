@@ -13,7 +13,7 @@ projectrouter.post('/:id',auth(endPointproject.add),fileUpload(fileValidation.im
 projectrouter.delete('/delete',auth(endPointproject.delete),projectcont.deleteProjects);
 projectrouter.patch('/update/:id',auth(endPointproject.update),fileUpload(fileValidation.image).single('image'),projectcont.updateProject)
 projectrouter.get('/get',auth(endPointproject.get),projectcont.getproject);
-projectrouter.get('/search',auth(endPointproject.search),projectcont.serach);
+projectrouter.get('/projectincategory',auth(endPointproject.search),projectcont.projectcategory);
 projectrouter.get('/Group',auth(endPointproject.create),creategroup.createGroupProject);
 projectrouter.get('/confirmEmail/:token',validation(validators.token),creategroup.confirmEmail);
 projectrouter.patch('/taskstatus/:id',auth(endPointproject.update),creategroup.updatestatus);

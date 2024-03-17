@@ -117,11 +117,11 @@ export const getproject=asyncHandler(async(req,res,next)=>{
     return next(new Error(`No projects added`));
    }
    const artwork = project.artwork;
-   return res.status(201).json({ message: "Your Projects is", artwork });
+   return res.status(200).json({ message: "Your Projects is", artwork });
 
 })
 
-export const serach=asyncHandler(async(req,res,next)=>{
+export const projectcategory=asyncHandler(async(req,res,next)=>{
     const user = await userModel.findById(req.user._id);
     if (!user) {
         return next(new Error(`please sign up first `, { cause: 400 }));
@@ -144,7 +144,7 @@ export const serach=asyncHandler(async(req,res,next)=>{
      else {
         return next(new Error(`No projects added`));
     }
-    return res.status(201).json({ message: "Projects in this category",projincat})
+    return res.status(200).json({ message: "Projects in this category",projincat})
 }
 
 )
