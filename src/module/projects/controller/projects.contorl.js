@@ -111,18 +111,13 @@ export const getproject=asyncHandler(async(req,res,next)=>{
     if (!user) {
         return next(new Error(`please sign up first `, { cause: 400 }));
     }
-    const userid=req.body.userid;
-    if(!userid)
-    {
-        return res.status(404).json({ message: "This user does not exist" });
-    }
-   const project=await projectModel.findOne({userId:userid})
+   const project=await projectModel.findOne({userId:user._id})
    if(!project)
    {
     return next(new Error(`No projects added`));
    }
    const artwork = project.artwork;
-   return res.status(201).json({ message: "Projects for this user is", artwork });
+   return res.status(201).json({ message: "Your Projects is", artwork });
 
 })
 
