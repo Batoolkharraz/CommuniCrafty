@@ -5,6 +5,7 @@ import craftRouter from './craft/craft.router.js';
 import toolRouter from './tool/tool.router.js';
 import projectrouter from './projects/projects.router.js';
 import promotRouter from './promot/promot.router.js';
+import newsRouter from './EXapi/EXapi.router.js';
 import { globalErrorHandel } from '../Services/errorHandling.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -28,6 +29,7 @@ const initApp=(app,express)=>{
     app.use('/project',projectrouter)
     app.use('/tool',toolRouter);
     app.use('/promot',promotRouter);
+    app.use('/news',newsRouter);
     app.use('*',(req,res)=>{
         return res.json({message:"page not found"});
     })
