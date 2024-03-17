@@ -4,8 +4,6 @@ import { endPointproject } from './end.js';
 import *as creategroup from "./creategroup.js";
 import { validation } from "../../MiddleWare/validation.js";
 import * as validators from '../auth/auth.validation.js';
-// import { validation } from "../../MiddleWare/validation.js";
-// import * as validator from "../projects/project.validayion.js"
 const Grouprouter = Router();
 Grouprouter.get('/Group',auth(endPointproject.create),creategroup.createGroupProject);
 Grouprouter.get('/confirmEmail/:token',validation(validators.token),creategroup.confirmEmail);
