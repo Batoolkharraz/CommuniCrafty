@@ -46,10 +46,9 @@ export const deleteCraft = asyncHandler(async (req, res, next) => {
     }
 
     const existingCraft = await craftModel.findOne({
-        id: req.user._id,
+        userId: req.user._id,
         'craft.categoryId': categoryId
-    });
-
+    })
     if (!existingCraft) {
         return res.status(404).json({ message: "Craft not found" });
     }
