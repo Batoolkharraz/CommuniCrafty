@@ -117,7 +117,7 @@ export const getproject=asyncHandler(async(req,res,next)=>{
     return next(new Error(`No projects added`));
    }
    const artwork = project.artwork;
-   return res.status(201).json({ message: "Projects for this user is", artwork });
+   return res.status(201).json({ message: "Your Projects is", artwork });
 
 })
 
