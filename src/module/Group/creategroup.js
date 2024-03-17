@@ -93,8 +93,14 @@ export const updatestatus=asyncHandler(async(req,res,next)=>{
     }
     const taskstatus=req.body.taskstatus
     let  task;
-    const confirm=await projectGroupModel.findById(id)
+    
     let updated = false;
+    if(taskstatus!=true)
+    {
+        return next(new Error(`Invalid Input`, { cause: 404 })); 
+    }
+
+    const confirm=await projectGroupModel.findById(id)
     for(let i=0;i<confirm.members.length;i++)
     {
         if (confirm.members[i].confirm === true) {
