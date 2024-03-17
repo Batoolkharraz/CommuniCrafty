@@ -1,8 +1,8 @@
-import projectGroupModel from "../../../../DB/model/group.model.js";
-import userModel from "../../../../DB/model/user.model.js";
-import { asyncHandler } from "../../../Services/errorHandling.js";
-import { generateToken, verifyToken } from "../../../Services/generateAndVerify.js";
-import { sendEmail } from "../../../Services/sendEmail.js";
+import projectGroupModel from "../../../DB/model/group.model.js";
+import userModel from "../../../DB/model/user.model.js";
+import { asyncHandler } from "../../Services/errorHandling.js";
+import { generateToken, verifyToken } from "../../Services/generateAndVerify.js";
+import { sendEmail } from "../../Services/sendEmail.js";
 
 export const createGroupProject = asyncHandler(async (req, res, next) => {
     const { projectname, description, members } = req.body;

@@ -10,6 +10,7 @@ import { globalErrorHandel } from '../Services/errorHandling.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import cors from 'cors';
+import Grouprouter from './Group/Group.router.js';
 
 const __dirname=path.dirname(fileURLToPath(import.meta.url));
 const fullPath = path.join(__dirname,'../../upload');
@@ -28,6 +29,7 @@ const initApp=(app,express)=>{
     app.use('/craft',craftRouter);
     app.use('/project',projectrouter)
     app.use('/tool',toolRouter);
+    app.use('/Group',Grouprouter)
     app.use('/promot',promotRouter);
     app.use('/news',newsRouter);
     app.use('*',(req,res)=>{
