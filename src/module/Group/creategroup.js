@@ -88,18 +88,20 @@ export const confirmEmail = asyncHandler(async (req, res) => {
 export const updatestatus=asyncHandler(async(req,res,next)=>{
     const id = req.params.id;
     const user = await userModel.findById(req.user._id);
+    const taskstatus=req.body.taskstatus
+    let  task;
+    let updated = false;
     if (!user) {
         return next(new Error(`please sign up first `, { cause: 400 }));
     }
-    const taskstatus=req.body.taskstatus
-    let  task;
-    
-    let updated = false;
+   if(id.toString()!= user.id.toString())
+   {
+    return next(new Error(` You are not able to update this status`, { cause: 404 })); 
+   }
     if(taskstatus!=true)
     {
         return next(new Error(`Invalid Input`, { cause: 404 })); 
     }
-
     const confirm=await projectGroupModel.findById(id)
     for(let i=0;i<confirm.members.length;i++)
     {
