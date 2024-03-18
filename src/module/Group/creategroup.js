@@ -31,30 +31,28 @@ export const createGroupProject = asyncHandler(async (req, res, next) => {
     const newProject = await projectGroupModel.create({
         projectname: projectname,
         description: description,
-        createdby:user._id,
+        createdby: user._id,
         members: membersData,
     });
 
     const projid = newProject._id;
-   
+
     // Sending email to each member individually, adjust as needed
     for (const memberData of members) {
         let email = memberData.email;
         const token = generateToken({ email, projid }, process.env.SIGNUP_TOKEN, 60 * 5);
         const refreshToken = generateToken({ email, projid }, process.env.SIGNUP_TOKEN, 60 * 60 * 24);
 
-        const link = `${req.protocol}://${req.headers.host}/project/confirmEmail/${token}`;
-        const Rlink = `${req.protocol}://${req.headers.host}/project/newConfirmEmail/${refreshToken}`;
+        const link = `${req.protocol}://${req.headers.host}/Group/confirmEmail/${token}`;
+        const Rlink = `${req.protocol}://${req.headers.host}/Group/newConfirmEmail/${refreshToken}`;
         const html = `<a href="${link}">Accept invitation</a>  <br/> <br/> <br/> <a href="${Rlink}"> send new email </a> `;
-   
+
         await sendEmail(memberData.email, 'Project Invitation', html);
     }
 
-    
+
     return res.status(200).json({ message: "Success Project group is created", newProject });
 });
-
-
 
 export const confirmEmail = asyncHandler(async (req, res) => {
 
@@ -63,7 +61,7 @@ export const confirmEmail = asyncHandler(async (req, res) => {
     const projid = decoded.projid;
     const user = await userModel.findOne({ email: decoded.email })
     const proj = await projectGroupModel.findById(projid)
-    
+
     if (!decoded?.email || !projid) {
         return next(new Error("invalid token payload", { cause: 409 }));
     }
@@ -84,79 +82,82 @@ export const confirmEmail = asyncHandler(async (req, res) => {
     } else {
         return next(new Error("not register account or ur email is verify", { cause: 400 }))
     }
-})
-export const updatestatus=asyncHandler(async(req,res,next)=>{
+});
+
+export const updatestatus = asyncHandler(async (req, res, next) => {
     const id = req.params.id;
     const user = await userModel.findById(req.user._id);
-    const taskstatus=req.body.taskstatus
-    let  task;
-    let updated = false;
     if (!user) {
         return next(new Error(`please sign up first `, { cause: 400 }));
     }
-   if(id.toString()!= user.id.toString())
-   {
-    return next(new Error(` You are not able to update this status`, { cause: 404 })); 
-   }
-    if(taskstatus!=true)
-    {
-        return next(new Error(`Invalid Input`, { cause: 404 })); 
+    const project = await projectGroupModel.findById(id);
+
+    // Check if the project exists
+    if (!project) {
+        return next(new Error(` invalid project`, { cause: 404 }));
     }
-    const confirm=await projectGroupModel.findById(id)
-    for(let i=0;i<confirm.members.length;i++)
-    {
-        if (confirm.members[i].confirm === true) {
-            task=confirm.members[i].task
-                confirm.members[i].taskstatus=taskstatus
-                await confirm.save();
-                updated = true;
-                break;
-            
+
+    const taskstatus = req.body.taskstatus
+    let task;
+    let updated = false;
+    if (taskstatus != true) {
+        return next(new Error(`Invalid Input`, { cause: 404 }));
+    }
+    // Iterate over the members of the project group
+    for (let i = 0; i < project.members.length; i++) {
+        // Compare the userId of each member with the given userId
+        if (project.members[i].userId.toString() === req.user._id.toString()) {
+            task = project.members[i].task
+            project.members[i].taskstatus = taskstatus
+            await project.save();
+            updated = true;
+            break;
+        }
+        else {
+            return next(new Error(` You are not able to update this status`, { cause: 404 }));
         }
     }
 
     if (updated) {
-       
-    return res.status(200).json({ message: `${task} task for ${confirm.projectname} project is done by : ${user.email} ` });
+        return res.status(200).json({ message: `${task} task for ${confirm.projectname} project is done by : ${user.email} ` });
     } else {
         return next(new Error("not register account or ur email is verify", { cause: 400 }))
     }
 })
-export const getinformation=asyncHandler(async(req,res,next)=>{
+
+export const getinformation = asyncHandler(async (req, res, next) => {
     const id = req.params.id;
     const user = await userModel.findById(req.user._id);
     if (!user) {
         return next(new Error(`please sign up first `, { cause: 400 }));
     }
- 
-    const project=await projectGroupModel.findById(id)
-    const owner=project.createdby
-    if(user._id.toString() != owner.toString())
-    {
+
+    const project = await projectGroupModel.findById(id)
+    const owner = project.createdby
+    if (user._id.toString() != owner.toString()) {
         return res.status(404).json({ message: "You are not able to access this information" });
-    }  
-    return res.status(200).json({ message: 'Your Project information is ',project});  
+    }
+    return res.status(200).json({ message: 'Your Project information is ', project });
 
 });
 
-export const deletegroup=asyncHandler(async(req,res,next)=>{
+export const deletegroup = asyncHandler(async (req, res, next) => {
     const id = req.params.id;
     const user = await userModel.findById(req.user._id);
     if (!user) {
         return next(new Error(`please sign up first `, { cause: 400 }));
     }
-    const project=await projectGroupModel.findById(id)
-    const owner=project.createdby
-    if(user._id.toString() != owner.toString())
-    {
+    const project = await projectGroupModel.findById(id)
+    const owner = project.createdby
+    if (user._id.toString() != owner.toString()) {
         return res.status(404).json({ message: "You are not able to delete this information" });
-    }  
+    }
     await projectGroupModel.findByIdAndDelete(id);
     return res.status(200).json({ message: "Project deleted successfully" });
 });
 
 
-export const deleteuserfromgroup=asyncHandler(async(req,res,next)=>{
+export const deleteuserfromgroup = asyncHandler(async (req, res, next) => {
     const id = req.params.id;
     const user = await userModel.findById(req.user._id);
     if (!user) {
@@ -169,30 +170,30 @@ export const deleteuserfromgroup=asyncHandler(async(req,res,next)=>{
     }
     if (user._id.toString() !== owner.toString()) {
         return res.status(404).json({ message: "You are not able to update project information" });
-    } 
-    else
-   { const useremail = await userModel.findOne({ email: req.body.email });
-    if (!useremail) {
-        return res.status(404).json({ message: "User not found" });
     }
-    const userIdToDelete = useremail._id.toString();
-    let deleted = false;
-    for (let i = 0; i < project.members.length; i++) {
-        if (project.members[i].userId.toString() === userIdToDelete) {
-            project.members.splice(i, 1); // Remove the member at index i
-            deleted = true;
-            break;
+    else {
+        const useremail = await userModel.findOne({ email: req.body.email });
+        if (!useremail) {
+            return res.status(404).json({ message: "User not found" });
         }
+        const userIdToDelete = useremail._id.toString();
+        let deleted = false;
+        for (let i = 0; i < project.members.length; i++) {
+            if (project.members[i].userId.toString() === userIdToDelete) {
+                project.members.splice(i, 1); // Remove the member at index i
+                deleted = true;
+                break;
+            }
+        }
+        if (!deleted) {
+            return res.status(404).json({ message: "User is not a member of this project" });
+        }
+        await project.save();
+        return res.status(200).json({ message: "User deleted from the project" });
     }
-    if (!deleted) {
-        return res.status(404).json({ message: "User is not a member of this project" });
-    }
-    await project.save();
-    return res.status(200).json({ message: "User deleted from the project" });
-}
 
 })
-export const updateinfo = asyncHandler(async(req, res, next) => {
+export const updateinfo = asyncHandler(async (req, res, next) => {
     const id = req.params.id;
     const user = await userModel.findById(req.user._id);
     if (!user) {
@@ -252,7 +253,7 @@ export const adduseringroup = asyncHandler(async (req, res, next) => {
             });
             const email = req.body.email;
             await project.save();
-            const token = generateToken({email,id}, process.env.SIGNUP_TOKEN, 60 * 5);
+            const token = generateToken({ email, id }, process.env.SIGNUP_TOKEN, 60 * 5);
             const refreshToken = generateToken({ email, id }, process.env.SIGNUP_TOKEN, 60 * 60 * 24);
 
             const link = `${req.protocol}://${req.headers.host}/project/confirmEmail/${token}`;

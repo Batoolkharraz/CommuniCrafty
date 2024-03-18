@@ -3,8 +3,7 @@ import { asyncHandler } from "../../../Services/errorHandling.js";
 import cloudinary from "../../../Services/cloudinary.js";
 import userModel from "../../../../DB/model/user.model.js";
 import categoryModel from './../../../../DB/model/category.model.js';
-import mongoose from 'mongoose';
-import { sendEmail } from "../../../Services/sendEmail.js";
+
 export const createproject=asyncHandler(async(req,res,next)=>{
 const id = req.params.id;
 const user = await userModel.findById(req.user._id);
@@ -94,6 +93,10 @@ export const updateProject = asyncHandler(async (req, res, next) => {
     if(req.body.description!== undefined)
     {
         projToupdate.description=req.body.description
+    }
+    if(req.body.price!== undefined)
+    {
+        projToupdate.price=req.body.price
     }
    
     if (req.file) {

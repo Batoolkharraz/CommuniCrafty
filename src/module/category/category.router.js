@@ -15,4 +15,5 @@ router.patch('/update/:categoryId',auth(endPoint.update),validation(validators.u
 router.get('/',auth(endPoint.get),categoryCont.getAllCategory);
 router.get('/:categoryId',auth(endPoint.get),validation(validators.getCategory),categoryCont.getCategory);
 router.delete('/:id',auth(endPoint.delete),categoryCont.deleteCategory);
+
 export default router;
