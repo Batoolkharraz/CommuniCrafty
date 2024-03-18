@@ -100,6 +100,8 @@ export const updatestatus = asyncHandler(async (req, res, next) => {
     const taskstatus = req.body.taskstatus
     let task;
     let updated = false;
+    let found=false;
+    let order=0
     if (taskstatus != true) {
         return next(new Error(`Invalid Input`, { cause: 404 }));
     }
@@ -107,6 +109,17 @@ export const updatestatus = asyncHandler(async (req, res, next) => {
     for (let i = 0; i < project.members.length; i++) {
         // Compare the userId of each member with the given userId
         if (project.members[i].userId.toString() === req.user._id.toString()) {
+            found=true;
+            order=i;
+        }
+        else {
+            found=false;
+        }
+    }
+
+    for (let i = 0; i < project.members.length; i++) {
+        // Compare the userId of each member with the given userId
+        if (found&&order==i) {
             task = project.members[i].task
             project.members[i].taskstatus = taskstatus
             await project.save();
