@@ -242,6 +242,15 @@ export const adduseringroup = asyncHandler(async (req, res, next) => {
         if (!user) {
             return next(new Error(`Please sign up first `, { cause: 400 }));
         }
+        if(!useremail)
+        {
+            return next(new Error(`This user is not found in database `, { cause: 400 }));
+        }
+        if(!task)
+        {
+            return next(new Error(`Please Add the task `, { cause: 400 }));
+        }
+        
         const project = await projectGroupModel.findById(id);
         const owner = project.createdby;
         if (!project) {
@@ -250,6 +259,7 @@ export const adduseringroup = asyncHandler(async (req, res, next) => {
         if (user._id.toString() !== owner.toString()) {
             return res.status(404).json({ message: "You are not able to update project information" });
         }
+    
         else {
             project.members.push({
                 userId: useremail._id,
