@@ -271,8 +271,8 @@ export const adduseringroup = asyncHandler(async (req, res, next) => {
             const token = generateToken({ email, id }, process.env.SIGNUP_TOKEN, 60 * 5);
             const refreshToken = generateToken({ email, id }, process.env.SIGNUP_TOKEN, 60 * 60 * 24);
 
-            const link = `${req.protocol}://${req.headers.host}/project/confirmEmail/${token}`;
-            const Rlink = `${req.protocol}://${req.headers.host}/project/newConfirmEmail/${refreshToken}`;
+            const link = `${req.protocol}://${req.headers.host}/Group/confirmEmail/${token}`;
+            const Rlink = `${req.protocol}://${req.headers.host}/Group/newConfirmEmail/${refreshToken}`;
             const html = `<a href="${link}">Accept invitation</a>  <br/> <br/> <br/> <a href="${Rlink}"> send new email </a> `;
 
             await sendEmail(email, 'Project Invitation', html);
