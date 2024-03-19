@@ -108,6 +108,8 @@ export const updatestatus = asyncHandler(async (req, res, next) => {
     // Iterate over the members of the project group
     for (let i = 0; i < project.members.length; i++) {
         // Compare the userId of each member with the given userId
+        console.log(project.members[i].userId.toString());
+        console.log(req.user._id.toString());
         if (project.members[i].userId.toString() === req.user._id.toString()) {
             found=true;
             order=i;
