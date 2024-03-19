@@ -228,18 +228,7 @@ export const updateinfo = asyncHandler(async (req, res, next) => {
         if (req.body.description) {
             project.description = req.body.description;
         }
-        if (req.body.task && req.body.email) {
-            const useremail = await userModel.findOne({ email: req.body.email });
-            if (!useremail) {
-                return res.status(404).json({ message: "User not found" });
-            }
-            for (let i = 0; i < project.members.length; i++) {
-                if (project.members[i].userId.toString() === useremail._id.toString()) {
-                    project.members[i].task = req.body.task;
-                    break;
-                }
-            }
-        }
+      
         await project.save();
         return res.status(200).json({ message: "Success", project });
     }
