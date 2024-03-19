@@ -11,6 +11,6 @@ Grouprouter.patch('/taskstatus/:id',auth(endPointproject.update),creategroup.upd
 Grouprouter.get('/Groupinfo/:id',auth(endPointproject.get),creategroup.getinformation);
 Grouprouter.delete('/deletegroup/:id',auth(endPointproject.delete),creategroup.deletegroup);
 Grouprouter.patch('/updateinfo/:id',auth(endPointproject.update),creategroup.updateinfo);
-Grouprouter.delete('/deleteusergroup/:id',auth(endPointproject.delete),creategroup.deleteuserfromgroup);
+Grouprouter.delete('/deleteusergroup/:id',auth(endPointproject.deleteuser),creategroup.deleteuserfromgroup);
 Grouprouter.post('/adduser/:id',auth(endPointproject.add),creategroup.adduseringroup);
 export default Grouprouter;

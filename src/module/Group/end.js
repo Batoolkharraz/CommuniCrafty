@@ -7,4 +7,5 @@ export const endPointproject = {
   get: [roles.admin,roles.user],
   search: [roles.admin, roles.user],
   create: [roles.admin, roles.user],
+  deleteuser:[roles.admin,roles.user]
 }
