@@ -5,7 +5,7 @@ import *as creategroup from "./creategroup.js";
 import { validation } from "../../MiddleWare/validation.js";
 import * as validators from '../Group/Group.validayion.js';
 const Grouprouter = Router();
-Grouprouter.get('/Group',auth(endPointproject.create),validation(validators.createGroup),creategroup.createGroupProject);
+Grouprouter.post('/Group',auth(endPointproject.create),validation(validators.createGroup),creategroup.createGroupProject);
 Grouprouter.get('/confirmEmail/:token',validation(validators.token),creategroup.confirmEmail);
 Grouprouter.patch('/taskstatus/:id',auth(endPointproject.update),validation(validators.taskStatus),creategroup.updatestatus);
 Grouprouter.get('/Groupinfo/:id',auth(endPointproject.get),creategroup.getinformation);
