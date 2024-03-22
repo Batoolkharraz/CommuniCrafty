@@ -7,13 +7,11 @@ export const createGroup = joi.object({
     members: joi.array().items(joi.object({
         email: generalFeilds.email,
         task: joi.string().min(2).max(100).required(),
-        taskstatus: joi.boolean().default(false),
-        confirm: joi.boolean().default(false)
     })).required()
 });
 export const taskStatus=joi.object({
     id:generalFeilds.id,
-    taskstatus:joi.string().min(2).max(100),
+    taskstatus:joi.boolean,
 }).required();
 
 export const addToGroup=joi.object({
