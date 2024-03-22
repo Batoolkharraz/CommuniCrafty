@@ -65,22 +65,22 @@ export const getCategory = asyncHandler(async (req, res, next) => {
 })
 
 export const deleteCategory = asyncHandler(async (req, res, next) => {
-    const id = req.params.id;
-    const category = await categoryModel.findById(id);
+  
+    const categoryId = req.params.id;
 
+    const category = await categoryModel.findById(categoryId);
     if (!category) {
-        return next(new Error("category not found"));
+        return res.status(404).json({ message: "Category not found" });
     }
-    
-    const projToRemove = projectModel.artwork.find(artwork => artwork.categoryId.toString() === category._id.toString());
-    if (!projToRemove) {
-        return res.status(404).json({ message: "This project does not exist" });
+    const projects = await projectModel.find({ 'artwork.categoryId': categoryId });
+    for (const project of projects) {
+        project.artwork = project.artwork.filter(artwork => artwork.categoryId.toString() !== categoryId);
+        await project.save();
     }
-    projectModel.artwork = projectModel.artwork.filter(artwork => artwork.categoryId.toString() != category._id.toString());
-    await projects.save();
-    await categoryModel.findByIdAndDelete(category._id)
+    await category.remove();
 
-    return res.status(200).json({ message: "success" })
+    return res.status(200).json({ message: "Category and associated projects deleted successfully" });
+
 
 })
 
