@@ -11,7 +11,7 @@ export const createGroup = joi.object({
 });
 export const taskStatus=joi.object({
     id:generalFeilds.id,
-    taskstatus:joi.boolean,
+    taskstatus:joi.string().min(2).max(100),
 }).required();
 
 export const addToGroup=joi.object({
