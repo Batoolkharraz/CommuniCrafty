@@ -5,7 +5,7 @@ export const createGroup = joi.object({
     projectname: joi.string().min(2).max(100).required(),
     description: joi.string().min(2).max(100).required(),
     members: joi.array().items(joi.object({
-        userId: generalFeilds.id,
+        email: generalFeilds.email,
         task: joi.string().min(2).max(100).required(),
         taskstatus: joi.boolean().default(false),
         confirm: joi.boolean().default(false)
@@ -18,13 +18,13 @@ export const taskStatus=joi.object({
 
 export const addToGroup=joi.object({
     id:generalFeilds.id,
-    email:joi.string().min(2).max(10),
+    email:generalFeilds.email,
     task:joi.string().min(2).max(10),
 }).required();
 
 export const deleteFromGroup=joi.object({
     id:generalFeilds.id,
-    email:joi.string().min(2).max(10),
+    email:generalFeilds.email,
 }).required();
 
 export const deleteGroup=joi.object({
