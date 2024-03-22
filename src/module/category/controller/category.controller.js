@@ -77,7 +77,7 @@ export const deleteCategory = asyncHandler(async (req, res, next) => {
         project.artwork = project.artwork.filter(artwork => artwork.categoryId.toString() !== categoryId);
         await project.save();
     }
-    await category.remove();
+    await categoryModel.findByIdAndDelete(category._id)
 
     return res.status(200).json({ message: "Category and associated projects deleted successfully" });
 
