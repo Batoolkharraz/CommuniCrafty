@@ -1,11 +1,16 @@
 import joi from "joi";
 import { generalFeilds } from "../../MiddleWare/validation.js";
 
-export const createGroup=joi.object({
-    projectname:joi.string().min(2).max(100),
-    description:joi.string().min(2).max(100),
-}).required();
-
+export const createGroup = joi.object({
+    projectname: joi.string().min(2).max(100).required(),
+    description: joi.string().min(2).max(100).required(),
+    members: joi.array().items(joi.object({
+        userId: generalFeilds.id,
+        task: joi.string().min(2).max(100).required(),
+        taskstatus: joi.boolean().default(false),
+        confirm: joi.boolean().default(false)
+    })).required()
+});
 export const taskStatus=joi.object({
     id:generalFeilds.id,
     taskstatus:joi.string().min(2).max(100),
