@@ -84,62 +84,6 @@ export const confirmEmail = asyncHandler(async (req, res) => {
     }
 });
 
-export const updatestatus = asyncHandler(async (req, res, next) => {
-    const id = req.params.id;
-    const user = await userModel.findById(req.user._id);
-    if (!user) {
-        return next(new Error(`please sign up first `, { cause: 400 }));
-    }
-    const project = await projectGroupModel.findById(id);
-
-    // Check if the project exists
-    if (!project) {
-        return next(new Error(` invalid project`, { cause: 404 }));
-    }
-
-    const taskstatus = req.body.taskstatus
-    let task;
-    let updated = false;
-    let found=false;
-    let order=0
-    if (taskstatus != true) {
-        return next(new Error(`Invalid Input`, { cause: 404 }));
-    }
-    // Iterate over the members of the project group
-    for (let i = 0; i < project.members.length; i++) {
-        // Compare the userId of each member with the given userId
-        console.log(project.members[i].userId.toString());
-        console.log(req.user._id.toString());
-        if (project.members[i].userId.toString() === req.user._id.toString()) {
-            found=true;
-            order=i;
-        }
-        else {
-            found=false;
-        }
-    }
-
-    for (let i = 0; i < project.members.length; i++) {
-        // Compare the userId of each member with the given userId
-        if (found&&order==i) {
-            task = project.members[i].task
-            project.members[i].taskstatus = taskstatus
-            await project.save();
-            updated = true;
-            break;
-        }
-        else {
-            return next(new Error(` You are not able to update this status`, { cause: 404 }));
-        }
-    }
-
-    if (updated) {
-        return res.status(200).json({ message: `${task} task for ${confirm.projectname} project is done by : ${user.email} ` });
-    } else {
-        return next(new Error("not register account or ur email is verify", { cause: 400 }))
-    }
-})
-
 export const getinformation = asyncHandler(async (req, res, next) => {
     const id = req.params.id;
     const user = await userModel.findById(req.user._id);
@@ -165,7 +109,7 @@ export const deletegroup = asyncHandler(async (req, res, next) => {
     const project = await projectGroupModel.findById(id)
     const owner = project.createdby
     if (user._id.toString() != owner.toString()) {
-        return res.status(404).json({ message: "You are not able to delete this information" });
+        return res.status(404).json({ message: "You are not able to delete this group" });
     }
     await projectGroupModel.findByIdAndDelete(id);
     return res.status(200).json({ message: "Project deleted successfully" });
@@ -184,7 +128,7 @@ export const deleteuserfromgroup = asyncHandler(async (req, res, next) => {
         return res.status(404).json({ message: "Project not found" });
     }
     if (user._id.toString() !== owner.toString()) {
-        return res.status(404).json({ message: "You are not able to update project information" });
+        return res.status(404).json({ message: "You are not able to delete users" });
     }
     else {
         const useremail = await userModel.findOne({ email: req.body.email });
@@ -228,41 +172,38 @@ export const updateinfo = asyncHandler(async (req, res, next) => {
         if (req.body.description) {
             project.description = req.body.description;
         }
-        if (req.body.task && req.body.email) {
-            const useremail = await userModel.findOne({ email: req.body.email });
-            if (!useremail) {
-                return res.status(404).json({ message: "User not found" });
-            }
-            for (let i = 0; i < project.members.length; i++) {
-                if (project.members[i].userId.toString() === useremail._id.toString()) {
-                    project.members[i].task = req.body.task;
-                    break;
-                }
-            }
-        }
+      
         await project.save();
         return res.status(200).json({ message: "Success", project });
     }
 });
 
 export const adduseringroup = asyncHandler(async (req, res, next) => {
-    try {
+
         const id = req.params.id;
         const user = await userModel.findById(req.user._id);
-        const useremail = await userModel.findOne({ email: req.body.email });
+        const useremail = await userModel.findOne({ email: req.body.email });  
+        const project = await projectGroupModel.findById(id);
+        const owner = project.createdby;
         if (!user) {
             return next(new Error(`Please sign up first `, { cause: 400 }));
         }
-        const project = await projectGroupModel.findById(id);
-        const owner = project.createdby;
+        if(!useremail)
+        {
+            return next(new Error(`This user is not found in database `, { cause: 400 }));
+        }
+        if(!task)
+        {
+            return next(new Error(`Please Add the task `, { cause: 400 }));
+        }
+        
         if (!project) {
             return res.status(404).json({ message: "Project not found" });
         }
         if (user._id.toString() !== owner.toString()) {
             return res.status(404).json({ message: "You are not able to update project information" });
-        }
-        else {
-            project.members.push({
+        } 
+       project.members.push({
                 userId: useremail._id,
                 task: req.body.task, // Add any additional details if needed
             });
@@ -277,8 +218,46 @@ export const adduseringroup = asyncHandler(async (req, res, next) => {
 
             await sendEmail(email, 'Project Invitation', html);
             return res.status(200).json({ message: "User added to the project" });
-        }
-    } catch (error) {
-        next(error); // Pass any caught errors to the error handling middleware
-    }
+    
+    
 });
+
+
+export const updatestatus = asyncHandler(async (req, res, next) => {
+    const id = req.params.id;
+    const project = await projectGroupModel.findById(id);
+    const user = await userModel.findById(req.user._id);  
+    const taskstatus = req.body.taskstatus
+    let updated = false;
+    let found=false;
+    let order=0
+    if (!user) {
+        return next(new Error(`please sign up first `, { cause: 400 }));
+    }
+    if (!project) {
+        return next(new Error(`project not found`, { cause: 404 }));
+    }
+    if (taskstatus != true) {
+        return next(new Error(`Invalid Input`, { cause: 404 }));
+    }
+    for (let i = 0; i < project.members.length; i++) {
+        if (project.members[i].userId.toString() === req.user._id.toString()) {
+            found=true;
+            order=i;
+        }
+        else {
+        found=false;
+        }
+    }
+    if (found){
+            project.members[order].taskstatus = taskstatus
+            await project.save();
+            updated = true;
+        }
+
+    if (updated) {
+        return res.status(200).json({ message: `task for this project is done by : ${user.email} ` });
+    } else {
+        return next(new Error("You are not able to update the satus for this user", { cause: 400 }))
+    }
+})

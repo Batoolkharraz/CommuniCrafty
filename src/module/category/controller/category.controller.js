@@ -1,5 +1,7 @@
 
 import categoryModel from "../../../../DB/model/category.model.js";
+import projectGroupModel from "../../../../DB/model/group.model.js";
+import projectModel from "../../../../DB/model/project.model .js";
 import cloudinary from "../../../Services/cloudinary.js";
 import { asyncHandler } from "../../../Services/errorHandling.js";
 
@@ -63,15 +65,22 @@ export const getCategory = asyncHandler(async (req, res, next) => {
 })
 
 export const deleteCategory = asyncHandler(async (req, res, next) => {
-    const id = req.params.id;
-    const category = await categoryModel.findById(id);
+  
+    const categoryId = req.params.id;
 
+    const category = await categoryModel.findById(categoryId);
     if (!category) {
-        return next(new Error("category not found"));
+        return res.status(404).json({ message: "Category not found" });
     }
-
+    const projects = await projectModel.find({ 'artwork.categoryId': categoryId });
+    for (const project of projects) {
+        project.artwork = project.artwork.filter(artwork => artwork.categoryId.toString() !== categoryId);
+        await project.save();
+    }
     await categoryModel.findByIdAndDelete(category._id)
-    return res.status(200).json({ message: "success" })
+
+    return res.status(200).json({ message: "Category and associated projects deleted successfully" });
+
 
 })
 
