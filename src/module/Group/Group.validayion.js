@@ -2,9 +2,8 @@ import joi from "joi";
 import { generalFeilds } from "../../MiddleWare/validation.js";
 
 export const createGroup=joi.object({
-    name:joi.string().min(2).max(100),
+    projectname:joi.string().min(2).max(100),
     description:joi.string().min(2).max(100),
-    price:joi.number().positive().integer(),
 }).required();
 
 export const taskStatus=joi.object({
