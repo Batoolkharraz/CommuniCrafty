@@ -256,9 +256,6 @@ export const adduseringroup = asyncHandler(async (req, res, next) => {
         if (!project) {
             return res.status(404).json({ message: "Project not found" });
         }
-        if (user._id.toString() !== owner.toString()) {
-            return res.status(404).json({ message: "You are not able to update project information" });
-        }
             project.members.push({
                 userId: useremail._id,
                 task: req.body.task, // Add any additional details if needed
