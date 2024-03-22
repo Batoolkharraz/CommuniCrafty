@@ -235,10 +235,12 @@ export const updateinfo = asyncHandler(async (req, res, next) => {
 });
 
 export const adduseringroup = asyncHandler(async (req, res, next) => {
-    try {
+
         const id = req.params.id;
         const user = await userModel.findById(req.user._id);
-        const useremail = await userModel.findOne({ email: req.body.email });
+        const useremail = await userModel.findOne({ email: req.body.email });  
+        const project = await projectGroupModel.findById(id);
+        const owner = project.createdby;
         if (!user) {
             return next(new Error(`Please sign up first `, { cause: 400 }));
         }
@@ -251,16 +253,12 @@ export const adduseringroup = asyncHandler(async (req, res, next) => {
             return next(new Error(`Please Add the task `, { cause: 400 }));
         }
         
-        const project = await projectGroupModel.findById(id);
-        const owner = project.createdby;
         if (!project) {
             return res.status(404).json({ message: "Project not found" });
         }
         if (user._id.toString() !== owner.toString()) {
             return res.status(404).json({ message: "You are not able to update project information" });
         }
-    
-        else {
             project.members.push({
                 userId: useremail._id,
                 task: req.body.task, // Add any additional details if needed
@@ -276,8 +274,6 @@ export const adduseringroup = asyncHandler(async (req, res, next) => {
 
             await sendEmail(email, 'Project Invitation', html);
             return res.status(200).json({ message: "User added to the project" });
-        }
-    } catch (error) {
-        next(error); // Pass any caught errors to the error handling middleware
-    }
+    
+    
 });
