@@ -256,7 +256,7 @@ export const updatestatus = asyncHandler(async (req, res, next) => {
         }
 
     if (updated) {
-        return res.status(200).json({ message: `${task} task for ${confirm.projectname} project is done by : ${user.email} ` });
+        return res.status(200).json({ message: `task for ${confirm.projectname} project is done by : ${user.email} ` });
     } else {
         return next(new Error("You are not able to update the satus for this user", { cause: 400 }))
     }

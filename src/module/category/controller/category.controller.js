@@ -1,5 +1,7 @@
 
 import categoryModel from "../../../../DB/model/category.model.js";
+import projectGroupModel from "../../../../DB/model/group.model.js";
+import projectModel from "../../../../DB/model/project.model .js";
 import cloudinary from "../../../Services/cloudinary.js";
 import { asyncHandler } from "../../../Services/errorHandling.js";
 
@@ -69,8 +71,15 @@ export const deleteCategory = asyncHandler(async (req, res, next) => {
     if (!category) {
         return next(new Error("category not found"));
     }
-
+    
+    const projToRemove = projectModel.artwork.find(artwork => artwork.categoryId.toString() === category._id.toString());
+    if (!projToRemove) {
+        return res.status(404).json({ message: "This project does not exist" });
+    }
+    projectModel.artwork = projectModel.artwork.filter(artwork => artwork.categoryId.toString() != category._id.toString());
+    await projects.save();
     await categoryModel.findByIdAndDelete(category._id)
+
     return res.status(200).json({ message: "success" })
 
 })
