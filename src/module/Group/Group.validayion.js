@@ -30,3 +30,7 @@ export const deleteGroup=joi.object({
 export const updateGroup=joi.object({
     id:generalFeilds.id,
 }).required();
+
+export const token=joi.object({
+    token:joi.string().required(),
+        }).required()
