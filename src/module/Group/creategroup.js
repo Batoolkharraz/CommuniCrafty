@@ -179,48 +179,47 @@ export const updateinfo = asyncHandler(async (req, res, next) => {
 });
 
 export const adduseringroup = asyncHandler(async (req, res, next) => {
-
+    try {
         const id = req.params.id;
         const user = await userModel.findById(req.user._id);
-        const useremail = await userModel.findOne({ email: req.body.email });  
+        const useremail = await userModel.findOne({ email: req.body.email });
         const project = await projectGroupModel.findById(id);
         const owner = project.createdby;
-        task=req.body.task
+        const task = req.body.task; // Define the task variable here
         if (!user) {
             return next(new Error(`Please sign up first `, { cause: 400 }));
         }
-        if(!useremail)
-        {
+        if (!useremail) {
             return next(new Error(`This user is not found in database `, { cause: 400 }));
         }
-        if(!task)
-        {
+        if (!task) {
             return next(new Error(`Please Add the task `, { cause: 400 }));
         }
-        
+
         if (!project) {
             return res.status(404).json({ message: "Project not found" });
         }
         if (user._id.toString() !== owner.toString()) {
             return res.status(404).json({ message: "You are not able to update project information" });
-        } 
-       project.members.push({
-                userId: useremail._id,
-                task:task, // Add any additional details if needed
-            });
-            const email = req.body.email;
-            await project.save();
-            const token = generateToken({ email, id }, process.env.SIGNUP_TOKEN, 60 * 5);
-            const refreshToken = generateToken({ email, id }, process.env.SIGNUP_TOKEN, 60 * 60 * 24);
+        }
+        project.members.push({
+            userId: useremail._id,
+            task: task, // Add any additional details if needed
+        });
+        const email = req.body.email;
+        await project.save();
+        const token = generateToken({ email, id }, process.env.SIGNUP_TOKEN, 60 * 5);
+        const refreshToken = generateToken({ email, id }, process.env.SIGNUP_TOKEN, 60 * 60 * 24);
 
-            const link = `${req.protocol}://${req.headers.host}/Group/confirmEmail/${token}`;
-            const Rlink = `${req.protocol}://${req.headers.host}/Group/newConfirmEmail/${refreshToken}`;
-            const html = `<a href="${link}">Accept invitation</a>  <br/> <br/> <br/> <a href="${Rlink}"> send new email </a> `;
+        const link = `${req.protocol}://${req.headers.host}/Group/confirmEmail/${token}`;
+        const Rlink = `${req.protocol}://${req.headers.host}/Group/newConfirmEmail/${refreshToken}`;
+        const html = `<a href="${link}">Accept invitation</a>  <br/> <br/> <br/> <a href="${Rlink}"> send new email </a> `;
 
-            await sendEmail(email, 'Project Invitation', html);
-            return res.status(200).json({ message: "User added to the project" });
-    
-    
+        await sendEmail(email, 'Project Invitation', html);
+        return res.status(200).json({ message: "User added to the project" });
+    } catch (error) {
+        return next(new Error("catch error: " + error.message));
+    }
 });
 
 
