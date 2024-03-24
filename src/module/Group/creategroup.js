@@ -185,6 +185,7 @@ export const adduseringroup = asyncHandler(async (req, res, next) => {
         const useremail = await userModel.findOne({ email: req.body.email });  
         const project = await projectGroupModel.findById(id);
         const owner = project.createdby;
+        task=req.body.task
         if (!user) {
             return next(new Error(`Please sign up first `, { cause: 400 }));
         }
@@ -205,7 +206,7 @@ export const adduseringroup = asyncHandler(async (req, res, next) => {
         } 
        project.members.push({
                 userId: useremail._id,
-                task: req.body.task, // Add any additional details if needed
+                task:task, // Add any additional details if needed
             });
             const email = req.body.email;
             await project.save();
