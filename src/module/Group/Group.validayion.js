@@ -19,7 +19,7 @@ export const taskStatus=joi.object({
 export const addToGroup=joi.object({
     id:generalFeilds.id,
     email:generalFeilds.email,
-    task:joi.string().min(2).max(10),
+    task:joi.string().min(2).max(100),
 }).required();
 
 export const deleteFromGroup=joi.object({
