@@ -63,10 +63,10 @@ export const confirmEmail = asyncHandler(async (req, res) => {
     const proj = await projectGroupModel.findById(projid)
 
     if (!decoded?.email || !projid) {
-        return next(new Error("invalid token payload", { cause: 409 }));
+        return res.status(404).json({message:"invalid token payload"});
     }
     if (!proj) {
-        return next(new Error(`No projects added`));
+        return res.status(404).json({message:"invalid token payload"});
     }
     let updated = false;
     for (let i = 0; i < proj.members.length; i++) {
@@ -80,7 +80,7 @@ export const confirmEmail = asyncHandler(async (req, res) => {
     if (updated) {
         return res.status(200).redirect(`${process.env.URL}`);
     } else {
-        return next(new Error("not register account or ur email is verify", { cause: 400 }))
+        return res.status(400).json({message:"not register account or ur email is verify"});
     }
 });
 
